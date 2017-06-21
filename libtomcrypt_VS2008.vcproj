@@ -2143,6 +2143,14 @@
 					>
 				</File>
 				<File
+					RelativePath="src\pk\ecc\ecc_dp_alloc_bn.c"
+					>
+				</File>
+				<File
+					RelativePath="src\pk\ecc\ecc_dp_clear.c"
+					>
+				</File>
+				<File
 					RelativePath="src\pk\ecc\ecc_dp_find_by_name.c"
 					>
 				</File>
@@ -2163,6 +2171,10 @@
 					>
 				</File>
 				<File
+					RelativePath="src\pk\ecc\ecc_export_full.c"
+					>
+				</File>
+				<File
 					RelativePath="src\pk\ecc\ecc_export_raw.c"
 					>
 				</File>
@@ -2176,6 +2188,14 @@
 				</File>
 				<File
 					RelativePath="src\pk\ecc\ecc_import.c"
+					>
+				</File>
+				<File
+					RelativePath="src\pk\ecc\ecc_import_full.c"
+					>
+				</File>
+				<File
+					RelativePath="src\pk\ecc\ecc_import_pkcs8.c"
 					>
 				</File>
 				<File

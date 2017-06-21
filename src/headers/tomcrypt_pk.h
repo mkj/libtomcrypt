@@ -12,7 +12,8 @@
 enum {
    PK_PUBLIC=0,
    PK_PRIVATE=1,
-   PK_PUBLIC_COMPRESSED=2 /* used only when exporting public ECC key */
+   PK_PUBLIC_COMPRESSED=2, /* used only when exporting public ECC key */
+   PK_CURVEOID=4           /* used only when exporting public ECC key */
 };
 
 /* Indicates standard output formats that can be read e.g. by OpenSSL or GnuTLS */
@@ -27,7 +28,9 @@ int rand_bn_range(void *N, void *limit, prng_state *prng, int wprng);
 
 enum public_key_algorithms {
    PKA_RSA,
-   PKA_DSA
+   PKA_DSA,
+   PKA_EC,
+   EC_PRIME_FIELD
 };
 
 typedef struct Oid {
@@ -313,6 +316,9 @@ void ecc_free(ecc_key *key);
 int  ecc_export(unsigned char *out, unsigned long *outlen, int type, ecc_key *key);
 int  ecc_import(const unsigned char *in, unsigned long inlen, ecc_key *key);
 int  ecc_import_ex(const unsigned char *in, unsigned long inlen, ecc_key *key, const ltc_ecc_set_type *dp);
+int  ecc_import_pkcs8(const unsigned char *in,  unsigned long inlen, const void *pwd, unsigned long pwdlen, ecc_key *key, ltc_ecc_set_type *dp);
+int  ecc_export_full(unsigned char *out, unsigned long *outlen, int type, ecc_key *key);
+int  ecc_import_full(const unsigned char *in, unsigned long inlen, ecc_key *key, ltc_ecc_set_type *dp);
 int  ecc_export_raw(unsigned char *out, unsigned long *outlen, int type, ecc_key *key);
 int  ecc_import_raw(const unsigned char *in, unsigned long inlen, ecc_key *key, ltc_ecc_set_type *dp);
 
@@ -352,6 +358,9 @@ int  ecc_verify_key(ecc_key *key);
 
 #ifdef LTC_SOURCE
 /* INTERNAL ONLY - it should be later moved to src/headers/tomcrypt_internal.h */
+
+int ecc_dp_alloc_bn(ltc_ecc_set_type *dp, void *a, void *b, void *prime, void *order, void *gx, void *gy, unsigned long cofactor);
+int ecc_dp_clear(ltc_ecc_set_type *dp);
 
 /* low level functions */
 ecc_point *ltc_ecc_new_point(void);
@@ -530,6 +539,10 @@ typedef struct ltc_asn1_list_ {
    unsigned long size;
    /** The used flag, this is used by the CHOICE ASN.1 type to indicate which choice was made */
    int           used;
+   /** Flag used to indicate optional items in ASN.1 sequences */
+   int           optional;
+   /** Flag used to indicate context specific tags on ASN.1 sequence items */
+   unsigned char tag;
    /** prev/next entry in the list */
    struct ltc_asn1_list_ *prev, *next, *child, *parent;
 } ltc_asn1_list;
@@ -542,6 +555,8 @@ typedef struct ltc_asn1_list_ {
       LTC_MACRO_list[LTC_MACRO_temp].data = (void*)(Data);  \
       LTC_MACRO_list[LTC_MACRO_temp].size = (Size);  \
       LTC_MACRO_list[LTC_MACRO_temp].used = 0;       \
+      LTC_MACRO_list[LTC_MACRO_temp].tag = 0;        \
+      LTC_MACRO_list[LTC_MACRO_temp].optional = 0;   \
    } while (0)
 
 /* SEQUENCE */
@@ -557,6 +572,8 @@ int der_decode_sequence_ex(const unsigned char *in, unsigned long  inlen,
 
 int der_length_sequence(ltc_asn1_list *list, unsigned long inlen,
                         unsigned long *outlen);
+int der_length_sequence_ex(ltc_asn1_list *list, unsigned long inlen,
+                           unsigned long *outlen, unsigned long *payloadlen);
 
 /* SUBJECT PUBLIC KEY INFO */
 int der_encode_subject_public_key_info(unsigned char *out, unsigned long *outlen,
@@ -566,6 +583,11 @@ int der_encode_subject_public_key_info(unsigned char *out, unsigned long *outlen
 int der_decode_subject_public_key_info(const unsigned char *in, unsigned long inlen,
         unsigned int algorithm, void* public_key, unsigned long* public_key_len,
         unsigned long parameters_type, ltc_asn1_list* parameters, unsigned long parameters_len);
+
+int der_decode_subject_public_key_info_ex(const unsigned char *in, unsigned long inlen,
+        unsigned int algorithm, void* public_key, unsigned long* public_key_len,
+        unsigned long parameters_type, void* parameters, unsigned long parameters_len,
+        unsigned long *parameters_outsize);
 
 /* SET */
 #define der_decode_set(in, inlen, list, outlen) der_decode_sequence_ex(in, inlen, list, outlen, 0)
