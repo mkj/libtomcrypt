@@ -2059,11 +2059,19 @@
 					>
 				</File>
 				<File
+					RelativePath="src\pk\dh\dh_export_radix.c"
+					>
+				</File>
+				<File
 					RelativePath="src\pk\dh\dh_free.c"
 					>
 				</File>
 				<File
 					RelativePath="src\pk\dh\dh_import.c"
+					>
+				</File>
+				<File
+					RelativePath="src\pk\dh\dh_import_radix.c"
 					>
 				</File>
 				<File
