@@ -7,11 +7,6 @@
  * guarantee it works.
  */
 
-/* Implements ECC over Z/pZ for curve y^2 = x^3 - 3x + b
- *
- * All curves taken from NIST recommendation paper of July 1999
- * Available at http://csrc.nist.gov/cryptval/dss.htm
- */
 #include "tomcrypt.h"
 
 /**
@@ -36,7 +31,7 @@
 int ecc_encrypt_key(const unsigned char *in,   unsigned long inlen,
                           unsigned char *out,  unsigned long *outlen,
                           prng_state *prng, int wprng, int hash,
-                          ecc_key *key)
+                          const ecc_key *key)
 {
     unsigned char *pub_expt, *ecc_shared, *skey;
     ecc_key        pubkey;
@@ -62,9 +57,8 @@ int ecc_encrypt_key(const unsigned char *in,   unsigned long inlen,
     }
 
     /* make a random key and export the public copy */
-    if ((err = ecc_make_key_ex(prng, wprng, &pubkey, key->dp)) != CRYPT_OK) {
-       return err;
-    }
+    if ((err = ecc_copy_dp(key, &pubkey)) != CRYPT_OK) { return err; }
+    if ((err = ecc_generate_key(prng, wprng, &pubkey)) != CRYPT_OK) { return err; }
 
     pub_expt   = XMALLOC(ECC_BUF_SIZE);
     ecc_shared = XMALLOC(ECC_BUF_SIZE);
@@ -84,7 +78,14 @@ int ecc_encrypt_key(const unsigned char *in,   unsigned long inlen,
     }
 
     pubkeysize = ECC_BUF_SIZE;
-    if ((err = ecc_export(pub_expt, &pubkeysize, PK_PUBLIC, &pubkey)) != CRYPT_OK) {
+    if (ltc_mp.sqrtmod_prime != NULL) {
+       /* PK_COMPRESSED requires sqrtmod_prime */
+       err = ecc_get_key(pub_expt, &pubkeysize, PK_PUBLIC|PK_COMPRESSED, &pubkey);
+    }
+    else {
+       err = ecc_get_key(pub_expt, &pubkeysize, PK_PUBLIC, &pubkey);
+    }
+    if (err != CRYPT_OK) {
        ecc_free(&pubkey);
        goto LBL_ERR;
     }
