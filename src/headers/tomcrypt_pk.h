@@ -345,6 +345,7 @@ int  ecc_set_dp(const ltc_ecc_curve *cu, ecc_key *key);
 int  ecc_generate_key(prng_state *prng, int wprng, ecc_key *key);
 int  ecc_set_key(const unsigned char *in, unsigned long inlen, int type, ecc_key *key);
 int  ecc_get_key(unsigned char *out, unsigned long *outlen, int type, const ecc_key *key);
+int  ecc_get_oid_str(unsigned char *out, unsigned long *outlen, const ecc_key *key);
 
 int  ecc_make_key(prng_state *prng, int wprng, int keysize, ecc_key *key);
 int  ecc_make_key_ex(prng_state *prng, int wprng, ecc_key *key, const ltc_ecc_curve *cu);
