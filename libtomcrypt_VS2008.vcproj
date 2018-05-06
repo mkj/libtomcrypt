@@ -2287,6 +2287,10 @@
 					>
 				</File>
 				<File
+					RelativePath="src\pk\ecc\ecc_get_oid_str.c"
+					>
+				</File>
+				<File
 					RelativePath="src\pk\ecc\ecc_get_size.c"
 					>
 				</File>
