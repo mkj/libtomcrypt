@@ -18,6 +18,7 @@
 #define EN0 0
 #define DE1 1
 
+#if 0
 const struct ltc_cipher_descriptor des_desc =
 {
     "des",
@@ -31,6 +32,7 @@ const struct ltc_cipher_descriptor des_desc =
     &des_keysize,
     NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL
 };
+#endif
 
 const struct ltc_cipher_descriptor des3_desc =
 {
@@ -1516,6 +1518,7 @@ static void desfunc(ulong32 *block, const ulong32 *keys)
 }
 #endif
 
+#if 0
  /**
     Initialize the LTC_DES block cipher
     @param key The symmetric key you wish to pass
@@ -1542,6 +1545,7 @@ int des_setup(const unsigned char *key, int keylen, int num_rounds, symmetric_ke
 
     return CRYPT_OK;
 }
+#endif
 
  /**
     Initialize the 3LTC_DES-EDE block cipher
@@ -1585,6 +1589,7 @@ int des3_setup(const unsigned char *key, int keylen, int num_rounds, symmetric_k
     return CRYPT_OK;
 }
 
+#if 0
 /**
   Encrypts a block of text with LTC_DES
   @param pt The input plaintext (8 bytes)
@@ -1626,6 +1631,7 @@ int des_ecb_decrypt(const unsigned char *ct, unsigned char *pt, symmetric_key *s
     STORE32H(work[1],pt+4);
     return CRYPT_OK;
 }
+#endif
 
 /**
   Encrypts a block of text with 3LTC_DES-EDE
@@ -1674,6 +1680,7 @@ int des3_ecb_decrypt(const unsigned char *ct, unsigned char *pt, symmetric_key *
     return CRYPT_OK;
 }
 
+#if 0
 /**
   Performs a self-test of the LTC_DES block cipher
   @return CRYPT_OK if functional, CRYPT_NOP if self-test has been disabled
@@ -1991,6 +1998,7 @@ int des_test(void)
     return CRYPT_OK;
   #endif
 }
+#endif
 
 int des3_test(void)
 {
@@ -2028,6 +2036,7 @@ int des3_test(void)
  #endif
 }
 
+#if 0
 /** Terminate the context
    @param skey    The scheduled key
 */
@@ -2035,6 +2044,7 @@ void des_done(symmetric_key *skey)
 {
   LTC_UNUSED_PARAM(skey);
 }
+#endif
 
 /** Terminate the context
    @param skey    The scheduled key
@@ -2045,6 +2055,7 @@ void des3_done(symmetric_key *skey)
 }
 
 
+#if 0
 /**
   Gets suitable key size
   @param keysize [in/out] The length of the recommended key (in bytes).  This function will store the suitable size back in this variable.
@@ -2059,6 +2070,7 @@ int des_keysize(int *keysize)
     *keysize = 8;
     return CRYPT_OK;
 }
+#endif
 
 /**
   Gets suitable key size

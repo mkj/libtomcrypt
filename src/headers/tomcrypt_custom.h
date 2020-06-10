@@ -10,6 +10,14 @@
 #ifndef TOMCRYPT_CUSTOM_H_
 #define TOMCRYPT_CUSTOM_H_
 
+#include "tomcrypt_dropbear.h"
+
+#include "dbmalloc.h"
+#define XMALLOC m_malloc
+#define XFREE m_free_direct
+#define XREALLOC m_realloc
+#define XCALLOC m_calloc
+
 /* macros for various libc functions you can change for embedded targets */
 #ifndef XMALLOC
 #define XMALLOC  malloc
@@ -502,7 +510,8 @@
    #error ASN.1 DER requires MPI functionality
 #endif
 
-#if (defined(LTC_MDSA) || defined(LTC_MRSA) || defined(LTC_MECC) || defined(LTC_MKAT)) && !defined(LTC_DER)
+/* Dropbear patched out LTC_MECC */
+#if (defined(LTC_MDSA) || defined(LTC_MRSA) || /*defined(LTC_MECC) ||*/ defined(LTC_MKAT)) && !defined(LTC_DER)
    #error PK requires ASN.1 DER functionality, make sure LTC_DER is enabled
 #endif
 

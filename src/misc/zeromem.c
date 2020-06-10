@@ -7,6 +7,7 @@
  * guarantee it works.
  */
 #include "tomcrypt.h"
+#include "dbhelpers.h"
 
 /**
    @file zeromem.c
@@ -20,11 +21,7 @@
 */
 void zeromem(volatile void *out, size_t outlen)
 {
-   volatile char *mem = out;
-   LTC_ARGCHKVD(out != NULL);
-   while (outlen-- > 0) {
-      *mem++ = '\0';
-   }
+   m_burn((void*)out, outlen);
 }
 
 /* ref:         $Format:%D$ */

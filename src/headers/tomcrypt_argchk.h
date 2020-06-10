@@ -13,6 +13,14 @@
 
 #include <signal.h>
 
+/* portability macros for compiler-specific code attributes */
+#ifdef __GNUC__
+#define ATTRIB_NORETURN __attribute__((noreturn))
+#else
+#define ATTRIB_NORETURN
+#endif
+
+
 /* this is the default LibTomCrypt macro  */
 #if defined(__clang__) || defined(__GNUC_MINOR__)
 #define NORETURN __attribute__ ((noreturn))

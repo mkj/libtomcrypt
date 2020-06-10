@@ -26,7 +26,7 @@
 */
 int hmac_done(hmac_state *hmac, unsigned char *out, unsigned long *outlen)
 {
-    unsigned char *buf, *isha;
+    unsigned char buf[MAXBLOCKSIZE], isha[MAXBLOCKSIZE];
     unsigned long hashsize, i;
     int hash, err;
 
@@ -42,20 +42,6 @@ int hmac_done(hmac_state *hmac, unsigned char *out, unsigned long *outlen)
     /* get the hash message digest size */
     hashsize = hash_descriptor[hash].hashsize;
 
-    /* allocate buffers */
-    buf  = XMALLOC(LTC_HMAC_BLOCKSIZE);
-    isha = XMALLOC(hashsize);
-    if (buf == NULL || isha == NULL) {
-       if (buf != NULL) {
-          XFREE(buf);
-       }
-       if (isha != NULL) {
-          XFREE(isha);
-       }
-       return CRYPT_MEM;
-    }
-
-    /* Get the hash of the first HMAC vector plus the data */
     if ((err = hash_descriptor[hash].done(&hmac->md, isha)) != CRYPT_OK) {
        goto LBL_ERR;
     }
@@ -93,9 +79,6 @@ LBL_ERR:
     zeromem(buf,  hashsize);
     zeromem(hmac, sizeof(*hmac));
 #endif
-
-    XFREE(isha);
-    XFREE(buf);
 
     return err;
 }
